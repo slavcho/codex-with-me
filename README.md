@@ -64,3 +64,42 @@ Current API surface:
 Session websocket:
 
 - `/ws/projects/:projectId/sessions/:sessionId?token=:sessionToken`
+
+## Nginx reverse proxy
+
+When serving Codex With Me through nginx, proxy websocket upgrades for `/ws/`
+separately from normal HTTP traffic:
+
+```nginx
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    listen 80;
+    server_name your-host.example;
+
+    location / {
+        proxy_pass http://127.0.0.1:8011;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:8011;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+}
+```
+
+If `/ws/...` returns a JSON 404, nginx is forwarding it as a normal HTTP GET
+instead of a websocket upgrade.
