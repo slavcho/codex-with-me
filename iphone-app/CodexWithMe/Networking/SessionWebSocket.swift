@@ -129,7 +129,11 @@ final class SessionWebSocket: ObservableObject {
         }
         do {
             let data = try encoder.encode(value)
-            task.send(.data(data)) { [weak self] error in
+            guard let payload = String(data: data, encoding: .utf8) else {
+                lastError = "Unable to encode websocket message."
+                return
+            }
+            task.send(.string(payload)) { [weak self] error in
                 guard let error else {
                     return
                 }

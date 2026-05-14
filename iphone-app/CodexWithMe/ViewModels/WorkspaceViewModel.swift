@@ -154,6 +154,10 @@ final class WorkspaceViewModel: ObservableObject {
         selectSessionId(session.id)
     }
 
+    func closeSelectedSession() {
+        selectSessionId(nil)
+    }
+
     func sendPrompt(_ prompt: String) {
         socket.sendPrompt(prompt)
     }
