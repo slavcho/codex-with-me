@@ -106,7 +106,7 @@ private struct ChatMessageBubble: View {
 
                 if let detail = entry.detail, !detail.isEmpty {
                     Text(detail)
-                        .font(.caption2.monospaced())
+                        .font(.caption.monospaced())
                         .textSelection(.enabled)
                         .padding(8)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -227,30 +227,30 @@ private extension Theme {
         .text {
             ForegroundColor(.primary)
             BackgroundColor(nil)
-            FontSize(12)
+            FontSize(15)
         }
         .code {
             FontFamilyVariant(.monospaced)
-            FontSize(10.5)
+            FontSize(13)
             BackgroundColor(.black.opacity(0.08))
         }
         .heading1 { configuration in
-            compactHeading(configuration, size: 14, top: 4, bottom: 4)
+            compactHeading(configuration, size: 18, top: 5, bottom: 5)
         }
         .heading2 { configuration in
-            compactHeading(configuration, size: 13.5, top: 4, bottom: 4)
+            compactHeading(configuration, size: 17, top: 5, bottom: 5)
         }
         .heading3 { configuration in
-            compactHeading(configuration, size: 13, top: 3, bottom: 3)
+            compactHeading(configuration, size: 16, top: 4, bottom: 4)
         }
         .heading4 { configuration in
-            compactHeading(configuration, size: 12.5, top: 3, bottom: 3)
+            compactHeading(configuration, size: 15.5, top: 4, bottom: 4)
         }
         .heading5 { configuration in
-            compactHeading(configuration, size: 12, top: 3, bottom: 3)
+            compactHeading(configuration, size: 15, top: 3, bottom: 3)
         }
         .heading6 { configuration in
-            compactHeading(configuration, size: 11.5, top: 3, bottom: 3)
+            compactHeading(configuration, size: 14.5, top: 3, bottom: 3)
         }
         .paragraph { configuration in
             configuration.label
@@ -278,7 +278,7 @@ private extension Theme {
                     .relativeLineSpacing(.em(0.1))
                     .markdownTextStyle {
                         FontFamilyVariant(.monospaced)
-                        FontSize(10.5)
+                        FontSize(13)
                     }
                     .padding(8)
             }
@@ -297,7 +297,7 @@ private extension Theme {
                         FontWeight(.semibold)
                     }
                     BackgroundColor(nil)
-                    FontSize(11)
+                    FontSize(14)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.vertical, 4)

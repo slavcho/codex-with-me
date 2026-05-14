@@ -13,29 +13,30 @@ struct SessionDetailView: View {
     var body: some View {
         Group {
             if let snapshot = socket.snapshot {
-                ActivityTimelineView(entries: snapshot.history)
-                    .ignoresSafeArea(.container, edges: .top)
+                VStack(spacing: 0) {
+                    FloatingSessionControls(
+                        status: socket.status,
+                        isRunning: snapshot.status == .running,
+                        backAction: viewModel.closeSelectedSession,
+                        resetAction: viewModel.resetSession,
+                        deleteAction: { isConfirmingDelete = true }
+                    )
+                    .padding(.horizontal, 8)
+                    .padding(.top, 6)
+                    .padding(.bottom, 8)
+
+                    ActivityTimelineView(entries: snapshot.history)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    PromptComposerView(
+                        isConnected: socket.status == .connected,
+                        isRunning: snapshot.status == .running,
+                        sendAction: viewModel.sendPrompt
+                    )
+                }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(.systemGroupedBackground).ignoresSafeArea())
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        PromptComposerView(
-                            isConnected: socket.status == .connected,
-                            isRunning: snapshot.status == .running,
-                            sendAction: viewModel.sendPrompt
-                        )
-                    }
                     .toolbar(.hidden, for: .navigationBar)
-                    .overlay(alignment: .top) {
-                        FloatingSessionControls(
-                            status: socket.status,
-                            isRunning: snapshot.status == .running,
-                            backAction: viewModel.closeSelectedSession,
-                            resetAction: viewModel.resetSession,
-                            deleteAction: { isConfirmingDelete = true }
-                        )
-                        .padding(.horizontal, 8)
-                        .padding(.top, 0)
-                        .ignoresSafeArea(.container, edges: .top)
-                    }
                     .confirmationDialog("Delete this session?", isPresented: $isConfirmingDelete, titleVisibility: .visible) {
                         Button("Delete Session", role: .destructive) {
                             Task {
@@ -124,13 +125,13 @@ private struct ConnectionBadge: View {
     private var iconName: String {
         switch status {
         case .connected:
-            return "wifi"
+            return "point.3.connected.trianglepath.dotted"
         case .connecting:
-            return "wifi"
+            return "point.3.connected.trianglepath.dotted"
         case .failed:
-            return "wifi.exclamationmark"
+            return "exclamationmark.triangle"
         default:
-            return "wifi.slash"
+            return "point.3.filled.connected.trianglepath.dotted"
         }
     }
 
