@@ -53,6 +53,13 @@ final class AuthViewModel: ObservableObject {
         self.authenticatedClient = nil
     }
 
+    func requireLogin(message: String = "Authentication required. Sign in again.") {
+        try? credentialStore.clear()
+        authenticatedClient = nil
+        secret = ""
+        errorMessage = message
+    }
+
     private func normalizedServerURL(from text: String) throws -> URL {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         let candidate = trimmed.contains("://") ? trimmed : "http://\(trimmed)"

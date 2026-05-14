@@ -27,6 +27,13 @@ struct WorkspaceView: View {
         .sheet(isPresented: $isRegisteringProject) {
             RegisterProjectView(viewModel: viewModel)
         }
+        .onChange(of: viewModel.requiresAuthentication) { _, requiresAuthentication in
+            guard requiresAuthentication else {
+                return
+            }
+            isRegisteringProject = false
+            authViewModel.requireLogin()
+        }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {

@@ -8,6 +8,7 @@ struct AuthenticatedClient: Equatable {
 enum APIClientError: LocalizedError {
     case invalidBaseURL
     case invalidResponse
+    case authenticationRequired
     case server(String)
 
     var errorDescription: String? {
@@ -16,6 +17,8 @@ enum APIClientError: LocalizedError {
             return "Enter a valid server URL."
         case .invalidResponse:
             return "The server returned an invalid response."
+        case .authenticationRequired:
+            return "Authentication required."
         case .server(let message):
             return message
         }
@@ -159,6 +162,9 @@ final class APIClient {
         }
 
         let message = (try? decoder.decode(ErrorPayload.self, from: data).error) ?? "Request failed with \(httpResponse.statusCode)."
+        if httpResponse.statusCode == 401 || message.isAuthenticationRequiredMessage {
+            throw APIClientError.authenticationRequired
+        }
         throw APIClientError.server(message)
     }
 
@@ -173,5 +179,9 @@ final class APIClient {
 private extension String {
     var urlPathEscaped: String {
         addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? self
+    }
+
+    var isAuthenticationRequiredMessage: Bool {
+        localizedCaseInsensitiveContains("Authentication required")
     }
 }

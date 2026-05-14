@@ -9,6 +9,7 @@ final class WorkspaceViewModel: ObservableObject {
     @Published var isLoadingProjects = false
     @Published var isLoadingSessions = false
     @Published var errorMessage: String?
+    @Published var requiresAuthentication = false
 
     let socket = SessionWebSocket()
 
@@ -29,6 +30,9 @@ final class WorkspaceViewModel: ObservableObject {
             baseURL: authenticatedClient.baseURL,
             tokenProvider: { authenticatedClient.session.token }
         )
+        socket.authenticationRequiredHandler = { [weak self] in
+            self?.markAuthenticationRequired()
+        }
     }
 
     deinit {
@@ -43,6 +47,9 @@ final class WorkspaceViewModel: ObservableObject {
 
     func refresh() async {
         await loadProjects(keepSelection: true)
+        guard !requiresAuthentication else {
+            return
+        }
         if let selectedProjectId {
             await loadSessions(projectId: selectedProjectId, keepSelection: true)
         }
@@ -68,7 +75,7 @@ final class WorkspaceViewModel: ObservableObject {
                 socket.disconnect()
             }
         } catch {
-            errorMessage = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -95,7 +102,7 @@ final class WorkspaceViewModel: ObservableObject {
             projects.append(project)
             await selectProject(project)
         } catch {
-            errorMessage = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -119,7 +126,7 @@ final class WorkspaceViewModel: ObservableObject {
             sessions = []
             selectedSessionId = nil
             socket.disconnect()
-            errorMessage = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -133,7 +140,7 @@ final class WorkspaceViewModel: ObservableObject {
             await loadSessions(projectId: projectId, keepSelection: true)
             selectSessionId(created.id)
         } catch {
-            errorMessage = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -146,7 +153,7 @@ final class WorkspaceViewModel: ObservableObject {
             try await apiClient.deleteSession(projectId: projectId, sessionId: selectedSessionId)
             await loadSessions(projectId: projectId)
         } catch {
-            errorMessage = error.localizedDescription
+            handle(error)
         }
     }
 
@@ -178,5 +185,32 @@ final class WorkspaceViewModel: ObservableObject {
             sessionId: sessionId,
             token: authenticatedClient.session.token
         )
+    }
+
+    private func handle(_ error: Error) {
+        if let apiError = error as? APIClientError, apiError.isAuthenticationRequired {
+            markAuthenticationRequired()
+            return
+        }
+        errorMessage = error.localizedDescription
+    }
+
+    private func markAuthenticationRequired() {
+        socket.disconnect()
+        projects = []
+        sessions = []
+        selectedProjectId = nil
+        selectedSessionId = nil
+        requiresAuthentication = true
+        errorMessage = APIClientError.authenticationRequired.localizedDescription
+    }
+}
+
+private extension APIClientError {
+    var isAuthenticationRequired: Bool {
+        if case .authenticationRequired = self {
+            return true
+        }
+        return false
     }
 }

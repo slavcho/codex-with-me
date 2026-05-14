@@ -6,6 +6,8 @@ final class SessionWebSocket: ObservableObject {
     @Published private(set) var snapshot: CodexSessionSnapshot?
     @Published private(set) var lastError: String?
 
+    var authenticationRequiredHandler: (() -> Void)?
+
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
     private var task: URLSessionWebSocketTask?
@@ -106,6 +108,9 @@ final class SessionWebSocket: ObservableObject {
             snapshot = current
         case .error(let message):
             lastError = message
+            if message.isAuthenticationRequiredMessage {
+                authenticationRequiredHandler?()
+            }
         }
     }
 
@@ -205,5 +210,9 @@ private extension CodexSessionSnapshot {
 private extension String {
     var urlPathEscaped: String {
         addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? self
+    }
+
+    var isAuthenticationRequiredMessage: Bool {
+        localizedCaseInsensitiveContains("Authentication required")
     }
 }
