@@ -1,6 +1,7 @@
 import { Bot, CheckCircle2, Code2, FileDiff, Terminal, TriangleAlert } from "lucide-react";
 
 import type { CodexHistoryEntry } from "../api/types";
+import { MarkdownMessage } from "./MarkdownMessage";
 
 function iconFor(entry: CodexHistoryEntry) {
 	if (entry.status === "failed" || entry.kind === "error") {
@@ -41,7 +42,7 @@ export function ActivityTimeline({ entries }: { entries: CodexHistoryEntry[] }) 
 							<strong>{entry.title}</strong>
 							<time dateTime={entry.at}>{new Date(entry.at).toLocaleTimeString()}</time>
 						</div>
-						<p>{entry.text}</p>
+						<MarkdownMessage text={entry.text} />
 						{entry.detail ? <pre>{entry.detail}</pre> : null}
 					</div>
 				</li>

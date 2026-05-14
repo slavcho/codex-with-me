@@ -4,7 +4,6 @@ import { LogOut, RefreshCcw } from "lucide-react";
 import type { CodexSessionSummary, Project } from "../api/types";
 import { useSessionSocket } from "../hooks/useSessionSocket";
 import { useAuth } from "../state/AuthContext";
-import { NotificationCenter } from "./NotificationCenter";
 import { ProjectSidebar } from "./ProjectSidebar";
 import { RegisterProjectForm } from "./RegisterProjectForm";
 import { SessionWorkspace } from "./SessionWorkspace";
@@ -138,7 +137,6 @@ export function Dashboard() {
 					onSendPrompt={socket.sendPrompt}
 					onResetSession={socket.resetSession}
 				/>
-				<NotificationCenter />
 			</div>
 		</div>
 	);

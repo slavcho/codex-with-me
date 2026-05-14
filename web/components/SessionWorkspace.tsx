@@ -82,28 +82,18 @@ export function SessionWorkspace({
 			{error ? <div className="inline-error">{error}</div> : null}
 
 			<section className="session-layout">
-				<div className="session-rail">
-					<div className="session-rail-heading">
-						<h3>Sessions</h3>
-						<button type="button" className="icon-button" title="New session" onClick={() => void onCreateSession()}>
-							<Plus size={18} aria-hidden="true" />
-						</button>
-					</div>
-					{isLoadingSessions ? (
-						<div className="loading-line">
-							<Loader2 className="spin" size={16} aria-hidden="true" />
-							<span>Loading</span>
-						</div>
-					) : null}
-					<div className="session-list">
+				<div className="session-tabs" aria-label="Sessions">
+					<div className="session-tabs-scroll" role="tablist" aria-label="Sessions">
 						{sessions.map((session) => (
 							<button
 								key={session.id}
 								type="button"
-								className={session.id === selectedSessionId ? "session-item is-active" : "session-item"}
+								role="tab"
+								aria-selected={session.id === selectedSessionId}
+								className={session.id === selectedSessionId ? "session-tab is-active" : "session-tab"}
 								onClick={() => onSelectSession(session.id)}
 							>
-								<Activity size={16} aria-hidden="true" />
+								<Activity size={15} aria-hidden="true" />
 								<span>
 									<strong>{session.title}</strong>
 									<small>{session.status} · {session.queuedPrompts} queued</small>
@@ -111,12 +101,23 @@ export function SessionWorkspace({
 							</button>
 						))}
 						{sessions.length === 0 && !isLoadingSessions ? (
-							<button type="button" className="empty-session-button" onClick={() => void onCreateSession()}>
-								<Plus size={18} aria-hidden="true" />
+							<button type="button" className="empty-session-tab" onClick={() => void onCreateSession()}>
+								<Plus size={16} aria-hidden="true" />
 								<span>New session</span>
 							</button>
 						) : null}
 					</div>
+					{isLoadingSessions ? (
+						<div className="session-tabs-loading">
+							<Loader2 className="spin" size={16} aria-hidden="true" />
+							<span>Loading</span>
+						</div>
+					) : null}
+					{sessions.length > 0 ? (
+						<button type="button" className="icon-button session-new-tab" title="New session" onClick={() => void onCreateSession()}>
+							<Plus size={18} aria-hidden="true" />
+						</button>
+					) : null}
 				</div>
 
 				<div className="session-detail">
