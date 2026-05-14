@@ -3,6 +3,11 @@ import { Bot, CheckCircle2, Code2, FileDiff, Terminal, TriangleAlert } from "luc
 import type { CodexHistoryEntry } from "../api/types";
 import { MarkdownMessage } from "./MarkdownMessage";
 
+const hiddenActivityTitles = new Set([
+	"Command started",
+	"Command completed",
+]);
+
 function iconFor(entry: CodexHistoryEntry) {
 	if (entry.status === "failed" || entry.kind === "error") {
 		return <TriangleAlert size={16} aria-hidden="true" />;
@@ -23,7 +28,9 @@ function iconFor(entry: CodexHistoryEntry) {
 }
 
 export function ActivityTimeline({ entries }: { entries: CodexHistoryEntry[] }) {
-	if (entries.length === 0) {
+	const visibleEntries = entries.filter((entry) => !hiddenActivityTitles.has(entry.title));
+
+	if (visibleEntries.length === 0) {
 		return (
 			<div className="empty-panel">
 				<h2>No activity yet</h2>
@@ -34,7 +41,7 @@ export function ActivityTimeline({ entries }: { entries: CodexHistoryEntry[] }) 
 
 	return (
 		<ol className="activity-list">
-			{entries.map((entry) => (
+			{visibleEntries.map((entry) => (
 				<li key={entry.id} className={`activity-item activity-${entry.status || "updated"}`}>
 					<div className="activity-icon">{iconFor(entry)}</div>
 					<div className="activity-body">

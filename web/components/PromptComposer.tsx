@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { RotateCcw, Send } from "lucide-react";
 
 type PromptComposerProps = {
@@ -16,8 +16,7 @@ export function PromptComposer({
 }: PromptComposerProps) {
 	const [prompt, setPrompt] = useState("");
 
-	const submit = (event: FormEvent) => {
-		event.preventDefault();
+	const sendCurrentPrompt = () => {
 		const nextPrompt = prompt.trim();
 		if (!nextPrompt || disabled) {
 			return;
@@ -26,11 +25,24 @@ export function PromptComposer({
 		setPrompt("");
 	};
 
+	const submit = (event: FormEvent) => {
+		event.preventDefault();
+		sendCurrentPrompt();
+	};
+
+	const handlePromptKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+		if (event.ctrlKey && event.key === "Enter") {
+			event.preventDefault();
+			sendCurrentPrompt();
+		}
+	};
+
 	return (
 		<form className="composer" onSubmit={submit}>
 			<textarea
 				value={prompt}
 				onChange={(event) => setPrompt(event.target.value)}
+				onKeyDown={handlePromptKeyDown}
 				placeholder="Ask Codex to inspect, change, test, or explain this project"
 				disabled={disabled}
 				rows={4}
