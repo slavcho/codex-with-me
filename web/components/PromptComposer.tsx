@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type KeyboardEvent } from "react";
-import { RotateCcw, Send } from "lucide-react";
+import { Loader2, RotateCcw, Send } from "lucide-react";
 
 type PromptComposerProps = {
 	disabled: boolean;
@@ -52,7 +52,7 @@ export function PromptComposer({
 					<RotateCcw size={18} aria-hidden="true" />
 				</button>
 				<button type="submit" className="primary-action" disabled={disabled || !prompt.trim()}>
-					<Send size={18} aria-hidden="true" />
+					{isRunning ? <Loader2 className="spin" size={18} aria-hidden="true" /> : <Send size={18} aria-hidden="true" />}
 					<span>{isRunning ? "Queue prompt" : "Send"}</span>
 				</button>
 			</div>

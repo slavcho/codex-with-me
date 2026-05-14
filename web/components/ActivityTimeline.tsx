@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef } from "react";
 import { Bot, CheckCircle2, Code2, FileDiff, Terminal, TriangleAlert } from "lucide-react";
 
 import type { CodexHistoryEntry } from "../api/types";
@@ -28,7 +29,20 @@ function iconFor(entry: CodexHistoryEntry) {
 }
 
 export function ActivityTimeline({ entries }: { entries: CodexHistoryEntry[] }) {
-	const visibleEntries = entries.filter((entry) => !hiddenActivityTitles.has(entry.title));
+	const listRef = useRef<HTMLOListElement | null>(null);
+	const visibleEntries = useMemo(() => entries.filter((entry) => !hiddenActivityTitles.has(entry.title)), [entries]);
+	const lastVisibleEntryId = visibleEntries.at(-1)?.id;
+
+	useEffect(() => {
+		const list = listRef.current;
+		if (!list) {
+			return;
+		}
+		const frame = window.requestAnimationFrame(() => {
+			list.scrollTop = list.scrollHeight;
+		});
+		return () => window.cancelAnimationFrame(frame);
+	}, [lastVisibleEntryId]);
 
 	if (visibleEntries.length === 0) {
 		return (
@@ -40,7 +54,7 @@ export function ActivityTimeline({ entries }: { entries: CodexHistoryEntry[] }) 
 	}
 
 	return (
-		<ol className="activity-list">
+		<ol className="activity-list" ref={listRef}>
 			{visibleEntries.map((entry) => (
 				<li key={entry.id} className={`activity-item activity-${entry.status || "updated"}`}>
 					<div className="activity-icon">{iconFor(entry)}</div>

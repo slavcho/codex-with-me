@@ -20,11 +20,18 @@
 	box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+	height: 100%;
+}
+
 body {
 	margin: 0;
 	min-width: 320px;
 	min-height: 100vh;
 	background: #f5f6f8;
+	overflow: hidden;
 }
 
 button,
@@ -198,9 +205,12 @@ textarea:focus {
 }
 
 .app-shell {
-	min-height: 100vh;
+	height: 100vh;
+	height: 100dvh;
+	min-height: 0;
 	display: grid;
 	grid-template-rows: auto 1fr;
+	overflow: hidden;
 }
 
 .topbar {
@@ -241,6 +251,7 @@ textarea:focus {
 	display: grid;
 	grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
 	min-height: 0;
+	overflow: hidden;
 }
 
 .sidebar,
@@ -562,7 +573,7 @@ textarea:focus {
 
 .activity-list {
 	min-height: 0;
-	overflow: auto;
+	overflow-y: auto;
 	list-style: none;
 	margin: 0;
 	padding: 12px;
@@ -790,16 +801,24 @@ textarea:focus {
 	}
 
 	.workspace-grid {
-		min-height: auto;
+		grid-template-rows: auto minmax(0, 1fr);
+		min-height: 0;
+	}
+
+	.sidebar {
+		max-height: 220px;
 	}
 
 	.sidebar,
-	.notifications,
+	.notifications {
+		overflow: auto;
+	}
+
 	.workspace-main {
-		overflow: visible;
+		overflow: hidden;
 	}
 
 	.session-detail {
-		min-height: 620px;
+		min-height: 0;
 	}
 }
