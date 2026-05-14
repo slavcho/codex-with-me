@@ -13,9 +13,11 @@ struct WorkspaceView: View {
         NavigationSplitView {
             ProjectListView(viewModel: viewModel, isRegisteringProject: $isRegisteringProject)
                 .navigationTitle("Projects")
+                .navigationBarTitleDisplayMode(.inline)
         } content: {
             SessionListView(viewModel: viewModel)
                 .navigationTitle(viewModel.selectedProject?.name ?? "Sessions")
+                .navigationBarTitleDisplayMode(.inline)
         } detail: {
             SessionDetailView(viewModel: viewModel)
         }

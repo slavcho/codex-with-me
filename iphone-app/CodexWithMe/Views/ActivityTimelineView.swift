@@ -34,15 +34,34 @@ struct ActivityTimelineView: View {
                 .contentMargins(.top, 0, for: .scrollContent)
                 .contentMargins(.bottom, 0, for: .scrollContent)
                 .onAppear {
-                    scrollToBottom(with: proxy, animated: false)
+                    scrollToBottomAfterLayout(with: proxy, animated: false)
                 }
                 .onChange(of: visibleEntries.count) { _, _ in
-                    scrollToBottom(with: proxy, animated: true)
+                    scrollToBottomAfterLayout(with: proxy, animated: true)
                 }
                 .onChange(of: visibleEntries.last?.id) { _, _ in
-                    scrollToBottom(with: proxy, animated: true)
+                    scrollToBottomAfterLayout(with: proxy, animated: true)
+                }
+                .task(id: visibleEntries.map(\.id).joined(separator: ",")) {
+                    scrollToBottomAfterLayout(with: proxy, animated: false)
                 }
             }
+        }
+    }
+
+    private func scrollToBottomAfterLayout(with proxy: ScrollViewProxy, animated: Bool) {
+        scrollToBottom(with: proxy, animated: animated)
+
+        DispatchQueue.main.async {
+            scrollToBottom(with: proxy, animated: animated)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            scrollToBottom(with: proxy, animated: animated)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            scrollToBottom(with: proxy, animated: animated)
         }
     }
 
@@ -54,14 +73,6 @@ struct ActivityTimelineView: View {
             withAnimation(.easeOut(duration: 0.2), scroll)
         } else {
             scroll()
-        }
-
-        DispatchQueue.main.async {
-            if animated {
-                withAnimation(.easeOut(duration: 0.2), scroll)
-            } else {
-                scroll()
-            }
         }
     }
 }

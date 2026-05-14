@@ -7,15 +7,15 @@ struct SessionListView: View {
         List(selection: $viewModel.selectedSessionId) {
             if let project = viewModel.selectedProject {
                 Section {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(project.name)
-                            .font(.headline)
+                            .font(.subheadline.weight(.semibold))
                         Text(project.directory)
-                            .font(.caption)
+                            .font(.caption2)
                             .foregroundStyle(.secondary)
                             .lineLimit(3)
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 2)
                 } header: {
                     Text("Current Project")
                 }
@@ -45,6 +45,9 @@ struct SessionListView: View {
                 ContentUnavailableView("Select a Project", systemImage: "folder", description: Text("Choose or register a project first."))
             }
         }
+        .contentMargins(.top, 0, for: .scrollContent)
+        .listSectionSpacing(.compact)
+        .environment(\.defaultMinListRowHeight, 36)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -66,15 +69,15 @@ private struct SessionRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: session.status == .running ? "bolt.circle.fill" : "circle")
-                .font(.title3)
+                .font(.subheadline)
                 .foregroundStyle(session.status == .running ? .green : .secondary)
-                .frame(width: 28)
+                .frame(width: 22)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(session.title)
-                    .font(.headline)
+                    .font(.subheadline.weight(.semibold))
                 Text(session.threadId.map { "Thread \($0)" } ?? "Thread starts with first prompt")
-                    .font(.caption)
+                    .font(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                 HStack(spacing: 8) {
@@ -86,6 +89,6 @@ private struct SessionRow: View {
                 .foregroundStyle(.secondary)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
     }
 }

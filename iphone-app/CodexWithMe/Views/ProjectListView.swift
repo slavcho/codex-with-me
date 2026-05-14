@@ -30,6 +30,9 @@ struct ProjectListView: View {
                 }
             }
         }
+        .contentMargins(.top, 0, for: .scrollContent)
+        .listSectionSpacing(.compact)
+        .environment(\.defaultMinListRowHeight, 36)
         .overlay(alignment: .bottom) {
             if let errorMessage = viewModel.errorMessage {
                 ErrorBanner(message: errorMessage)
@@ -54,15 +57,15 @@ private struct ProjectRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "folder")
-                .font(.title3)
+                .font(.subheadline)
                 .foregroundColor(project.exists && project.isDirectory ? .accentColor : .secondary)
-                .frame(width: 28)
+                .frame(width: 22)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(project.name)
-                    .font(.headline)
+                    .font(.subheadline.weight(.semibold))
                 Text(project.directory)
-                    .font(.caption)
+                    .font(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                 Text("\(project.sessions.total) sessions")
@@ -77,6 +80,6 @@ private struct ProjectRow: View {
                     .foregroundStyle(.orange)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
     }
 }
