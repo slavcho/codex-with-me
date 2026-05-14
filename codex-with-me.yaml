@@ -1,0 +1,27 @@
+server:
+  host: 127.0.0.1
+  port: 8011
+
+auth:
+  enabled: true
+  sharedSecret: codex-with-me
+  sessionTtlHours: 24
+
+sessions:
+  historyLimit: 400
+
+codex:
+  apiKey: ""
+  sandboxMode: workspace-write
+  approvalPolicy: never
+  model: ""
+  reasoningEffort: medium
+  networkAccessEnabled: true
+  webSearchMode: disabled
+  skipGitRepoCheck: false
+  additionalDirectories: []
+
+projects:
+  - id: codex-with-me
+    name: Codex With Me
+    directory: /home/slavcho/work/codex-with-me
