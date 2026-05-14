@@ -1,4 +1,5 @@
 import SwiftUI
+import MarkdownUI
 
 struct ActivityTimelineView: View {
     let entries: [CodexHistoryEntry]
@@ -101,7 +102,6 @@ private struct ChatMessageBubble: View {
 
                 if !messageText.isEmpty {
                     MarkdownText(messageText)
-                        .font(.caption)
                 }
 
                 if let detail = entry.detail, !detail.isEmpty {
@@ -216,14 +216,105 @@ private struct MarkdownText: View {
     }
 
     var body: some View {
-        if let attributed = try? AttributedString(markdown: text) {
-            Text(attributed)
-                .textSelection(.enabled)
-        } else {
-            Text(text)
-                .textSelection(.enabled)
-        }
+        Markdown(text)
+            .markdownTheme(.compactChat)
+            .textSelection(.enabled)
     }
+}
+
+private extension Theme {
+    static let compactChat = Theme.gitHub
+        .text {
+            ForegroundColor(.primary)
+            BackgroundColor(nil)
+            FontSize(12)
+        }
+        .code {
+            FontFamilyVariant(.monospaced)
+            FontSize(10.5)
+            BackgroundColor(.black.opacity(0.08))
+        }
+        .heading1 { configuration in
+            compactHeading(configuration, size: 14, top: 4, bottom: 4)
+        }
+        .heading2 { configuration in
+            compactHeading(configuration, size: 13.5, top: 4, bottom: 4)
+        }
+        .heading3 { configuration in
+            compactHeading(configuration, size: 13, top: 3, bottom: 3)
+        }
+        .heading4 { configuration in
+            compactHeading(configuration, size: 12.5, top: 3, bottom: 3)
+        }
+        .heading5 { configuration in
+            compactHeading(configuration, size: 12, top: 3, bottom: 3)
+        }
+        .heading6 { configuration in
+            compactHeading(configuration, size: 11.5, top: 3, bottom: 3)
+        }
+        .paragraph { configuration in
+            configuration.label
+                .fixedSize(horizontal: false, vertical: true)
+                .relativeLineSpacing(.em(0.12))
+                .markdownMargin(top: 0, bottom: 5)
+        }
+        .blockquote { configuration in
+            HStack(spacing: 5) {
+                Rectangle()
+                    .fill(Color.secondary.opacity(0.35))
+                    .frame(width: 2)
+                configuration.label
+                    .markdownTextStyle {
+                        ForegroundColor(.secondary)
+                    }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .markdownMargin(top: 2, bottom: 5)
+        }
+        .codeBlock { configuration in
+            ScrollView(.horizontal) {
+                configuration.label
+                    .fixedSize(horizontal: false, vertical: true)
+                    .relativeLineSpacing(.em(0.1))
+                    .markdownTextStyle {
+                        FontFamilyVariant(.monospaced)
+                        FontSize(10.5)
+                    }
+                    .padding(8)
+            }
+            .background(Color.black.opacity(0.06))
+            .clipShape(RoundedRectangle(cornerRadius: 6))
+            .markdownMargin(top: 2, bottom: 6)
+        }
+        .listItem { configuration in
+            configuration.label
+                .markdownMargin(top: 1)
+        }
+        .tableCell { configuration in
+            configuration.label
+                .markdownTextStyle {
+                    if configuration.row == 0 {
+                        FontWeight(.semibold)
+                    }
+                    BackgroundColor(nil)
+                    FontSize(11)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 7)
+                .relativeLineSpacing(.em(0.1))
+        }
+}
+
+@ViewBuilder
+private func compactHeading(_ configuration: BlockConfiguration, size: CGFloat, top: CGFloat, bottom: CGFloat) -> some View {
+    configuration.label
+        .relativeLineSpacing(.em(0.08))
+        .markdownMargin(top: top, bottom: bottom)
+        .markdownTextStyle {
+            FontWeight(.semibold)
+            FontSize(size)
+        }
 }
 
 private extension String {

@@ -25,6 +25,8 @@
 		1A0000010000000000000016 /* ActivityTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000001016 /* ActivityTimelineView.swift */; };
 		1A0000010000000000000017 /* PromptComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000001017 /* PromptComposerView.swift */; };
 		1A0000010000000000000018 /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000001018 /* ErrorBanner.swift */; };
+		1A0000010000000000000019 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000010000000000009002 /* MarkdownUI */; };
+		1A0000010000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000001021 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,7 @@
 		1A0000010000000000001018 /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
 		1A0000010000000000001019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A0000010000000000001020 /* CodexWithMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodexWithMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A0000010000000000001021 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0000010000000000000019 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0000010000000000001019 /* Info.plist */,
+				1A0000010000000000001021 /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -175,6 +180,9 @@
 			dependencies = (
 			);
 			name = CodexWithMe;
+			packageProductDependencies = (
+				1A0000010000000000009002 /* MarkdownUI */,
+			);
 			productName = CodexWithMe;
 			productReference = 1A0000010000000000001020 /* CodexWithMe.app */;
 			productType = "com.apple.product-type.application";
@@ -203,6 +211,9 @@
 				Base,
 			);
 			mainGroup = 1A0000010000000000003001;
+			packageReferences = (
+				1A0000010000000000009001 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+			);
 			productRefGroup = 1A0000010000000000003009 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -217,6 +228,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0000010000000000000020 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +383,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -399,6 +412,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -445,6 +459,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1A0000010000000000009001 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A0000010000000000009002 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A0000010000000000009001 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A0000010000000000006001 /* Project object */;
 }
